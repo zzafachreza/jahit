@@ -12,6 +12,7 @@ import {
   Order,
   OrderList,
   OrderDetail,
+  Ukuran,
 
 
 
@@ -28,6 +29,14 @@ export default function Router() {
       <Stack.Screen
         name="Splash"
         component={Splash}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="Ukuran"
+        component={Ukuran}
         options={{
           headerShown: false,
         }}

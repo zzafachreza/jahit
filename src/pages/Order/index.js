@@ -29,17 +29,34 @@ export default function Order({ navigation, route }) {
     fid_user: route.params.id,
     jenis: 'Produk Jadi',
     kain: 'Dari Penjahit',
-    model: 'Dari Penjahit',
+    model: 'Kameja Wanita',
     produk: '',
-    ukuran: '',
+    ukuran: 'S',
     biaya: '',
     pembayaran: 'Transfer',
     foto_bayar: 'https://zavalabs.com/nogambar.jpg',
+    foto_model: 'https://zavalabs.com/nogambar.jpg',
     alamat_kirim: '',
     tanggal_kirim: moment().format('YYYY-MM-DD'),
-
-
+    dikirim: 'Via Ekspedisi',
+    lebar_bahu: 0,
+    lebar_dada: 0,
+    panjang_lengan: 0,
+    pajang_baju: 0,
+    lingkar_pinggang: 0,
+    panjang_celana: 0,
+    lingkar_pinggul: 0,
+    lingkar_paha: 0,
+    lingkar_hem_bawah: 0,
+    lingkar_pesak: 0,
+    lingkar_lutut: 0,
+    lebar_bawah: 0,
+    panjang_rok: 0,
   })
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1) + ' (cm)';
+  }
   const options = {
     includeBase64: true,
     quality: 0.5,
@@ -81,6 +98,18 @@ export default function Order({ navigation, route }) {
     });
   };
 
+  const [dataUkuran, setDataUkuran] = useState([]);
+
+
+  const __getUkuran = (x = kirim.model) => {
+    axios.post(apiURL + 'ukuran', {
+      model: x
+    }).then(res => {
+      console.log('ukuran', res.data);
+      setDataUkuran(res.data);
+    })
+  }
+
   const __getProduk = async () => {
 
 
@@ -100,6 +129,7 @@ export default function Order({ navigation, route }) {
   useEffect(() => {
     if (isFocus) {
       __getProduk();
+      __getUkuran('Kemeja Wanita');
     }
   }, [isFocus]);
 
@@ -192,16 +222,102 @@ export default function Order({ navigation, route }) {
                 })
               }} data={data.kain} iconname="layers-outline" />
               <MyGap jarak={10} />
+
+
               <MyPicker label="Model" value={kirim.model} onValueChange={x => {
                 setKirim({
                   ...kirim,
                   model: x
-                })
+                });
+
+                __getUkuran(x)
+
               }} data={data.model} iconname="cube-outline" />
               <MyGap jarak={10} />
+
+              {dataUkuran.length > 0 &&
+
+                <View style={{
+                  borderWidth: 1,
+                  padding: 10,
+                  borderColor: colors.secondary,
+                  backgroundColor: colors.white,
+                  borderRadius: 10,
+                }}>
+                  {dataUkuran.map(i => {
+                    return (
+                      <MyInput label={capitalizeFirstLetter(i.kolom.toString().replace("_", " ").replace("_", " "))} value={kirim[i.kolom]} onChangeText={x => {
+                        setKirim({
+                          ...kirim,
+                          [i.kolom]: x
+                        })
+                      }} iconname="pricetag-outline" />
+                    )
+                  })}
+                </View>
+              }
+
             </>
 
           }
+
+
+          {kirim.jenis == 'Produk Baru' && kirim.kain == 'Dari Konsumen' &&
+
+            <>
+              <MyPicker label="Pengiriman" data={[
+                { value: 'Via Ekspedisi', label: 'Via Ekspedisi' },
+                { value: 'Langsung Oleh Konsumen', label: 'Langsung Oleh Konsumen' },
+
+              ]} value={kirim.dikirim} onValueChange={x => {
+                setKirim({
+                  ...kirim,
+                  dikirim: x
+                })
+              }} iconname="cloud-upload-outline" />
+              <MyGap jarak={10} />
+            </>}
+
+
+          {kirim.jenis == 'Produk Baru' && kirim.model == 'Dari Konsumen' &&
+
+            <>
+              <>
+                <TouchableOpacity onPress={() => getGallery(1)} style={{
+                  width: '100%',
+                  height: 250,
+                  padding: 10,
+                  overflow: 'hidden',
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: colors.border
+                }}>
+                  {kirim.foto_model !== 'https://zavalabs.com/nogambar.jpg' && <Image source={{
+                    uri: kirim.foto_model
+                  }} style={{
+                    width: '100%',
+                    height: 230,
+                    resizeMode: 'contain',
+                    borderRadius: 10,
+                  }} />}
+                  {kirim.foto_model == 'https://zavalabs.com/nogambar.jpg' &&
+                    <>
+                      <Image source={require('../../assets/camera.png')} style={{
+                        width: 40,
+                        height: 40,
+                      }} /><Text style={{
+                        fontFamily: fonts.secondary[400],
+                        fontSize: 15,
+                      }}>Contoh Model</Text>
+                    </>
+                  }
+
+                </TouchableOpacity>
+                <MyGap jarak={10} />
+              </>
+            </>}
 
           {kirim.jenis == 'Produk Jadi' &&
 
@@ -225,12 +341,22 @@ export default function Order({ navigation, route }) {
 
             </>}
 
-          <MyInput label="Ukuran" value={kirim.ukuran} onChangeText={x => {
-            setKirim({
-              ...kirim,
-              ukuran: x
-            })
-          }} iconname="hardware-chip-outline" />
+
+          {kirim.jenis == 'Produk Jadi' &&
+
+            <MyPicker label="Ukuran" data={[
+              { value: 'S', label: 'S' },
+              { value: 'M', label: 'M' },
+              { value: 'L', label: 'L' },
+              { value: 'XL', label: 'XL' },
+            ]} value={kirim.ukuran} onValueChange={x => {
+              setKirim({
+                ...kirim,
+                ukuran: x
+              })
+            }} iconname="hardware-chip-outline" />}
+
+
 
           <MyGap jarak={10} />
           <MyPicker label="Pembayaran" value={kirim.pembayaran} onValueChange={x => {

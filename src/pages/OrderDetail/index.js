@@ -37,6 +37,20 @@ export default function OrderDetail({ navigation, route }) {
     quality: 0.5,
     maxWidth: 400
   };
+
+  const [dataUkuran, setDataUkuran] = useState([]);
+
+
+  const __getUkuran = () => {
+    axios.post(apiURL + 'ukuran', {
+      model: route.params.model
+    }).then(res => {
+      console.log('ukuran', res.data);
+      setDataUkuran(res.data);
+    })
+  }
+
+
   const [user, setUser] = useState({});
   const isFocus = useIsFocused();
   const [data, setData] = useState([]);
@@ -87,6 +101,7 @@ export default function OrderDetail({ navigation, route }) {
   useEffect(() => {
     if (isFocus) {
       __getOrderDetail();
+      __getUkuran();
     }
   }, [isFocus]);
 
@@ -113,6 +128,9 @@ export default function OrderDetail({ navigation, route }) {
     )
   }
 
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1) + ' (cm)';
+  }
 
 
 
@@ -156,7 +174,32 @@ export default function OrderDetail({ navigation, route }) {
 
 
           <MYlist label="Produk" value={item.produk} />
-          <MYlist label="Ukuran" value={item.ukuran} />
+          {route.params.jenis == 'Produk Jadi' && <MYlist label="Ukuran" value={item.ukuran} />}
+
+          {route.params.jenis == 'Produk Baru' &&
+
+            <>
+
+              {dataUkuran.length > 0 &&
+
+                <View style={{
+                  borderWidth: 1,
+                  padding: 10,
+                  borderColor: colors.secondary,
+                  backgroundColor: colors.white,
+                  borderRadius: 10,
+                }}>
+                  {dataUkuran.map(i => {
+                    return (
+                      <MYlist label={capitalizeFirstLetter(i.kolom.toString().replace("_", " ").replace("_", " "))} value={item[i.kolom]} />
+
+                    )
+                  })}
+                </View>
+              }
+
+
+            </>}
           <MYlist label="Biaya" value={item.biaya} />
           <MYlist label="Alamat Kirim" value={item.alamat_kirim} />
           <MYlist label="Tanggal Kirim" value={moment(item.tanggal_kirim).format('dddd, DD MMMM YYYY') + ' ( ' + moment(item.tanggal_kirim).fromNow().toString().replace("dalam", "") + ' lagi )'} />

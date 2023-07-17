@@ -84,6 +84,22 @@ export default function Pengaturan({ navigation }) {
                     <Icon type='ionicon' name='chevron-forward' color={colors.black} />
                 </TouchableOpacity>
 
+                <TouchableOpacity onPress={() => navigation.navigate('Ukuran')} style={{
+                    flexDirection: 'row',
+                    padding: 20,
+                    marginVertical: 2
+                }}>
+                    <Icon type='ionicon' name='cut-outline' size={20} />
+                    <Text style={{
+                        left: 5,
+                        flex: 1,
+                        fontFamily: fonts.primary[600],
+                        fontSize: windowWidth / 20,
+                        color: colors.black
+                    }}>Informasi Ukuran</Text>
+                    <Icon type='ionicon' name='chevron-forward' color={colors.black} />
+                </TouchableOpacity>
+
                 {/* <TouchableOpacity onPress={() => {
                     Alert.alert(MYAPP, 'Apakah kamu yakin download data ini ?', [
                         { text: 'TIDAK' },

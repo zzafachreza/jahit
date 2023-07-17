@@ -8,6 +8,7 @@ import Pengaturan from './Pengaturan';
 import Order from './Order';
 import OrderList from './OrderList';
 import OrderDetail from './OrderDetail';
+import Ukuran from './Ukuran';
 
 
 
@@ -24,5 +25,5 @@ export {
   Order,
   OrderList,
   OrderDetail,
-
+  Ukuran,
 };
