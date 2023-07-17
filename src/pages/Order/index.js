@@ -86,6 +86,12 @@ export default function Order({ navigation, route }) {
                 foto_bayar: `data:${response.type};base64, ${response.base64}`,
               });
               break;
+            case 2:
+              setKirim({
+                ...kirim,
+                foto_model: `data:${response.type};base64, ${response.base64}`,
+              });
+              break;
 
           }
         } else {
@@ -283,7 +289,7 @@ export default function Order({ navigation, route }) {
 
             <>
               <>
-                <TouchableOpacity onPress={() => getGallery(1)} style={{
+                <TouchableOpacity onPress={() => getGallery(2)} style={{
                   width: '100%',
                   height: 250,
                   padding: 10,

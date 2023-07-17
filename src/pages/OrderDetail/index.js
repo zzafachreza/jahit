@@ -171,9 +171,33 @@ export default function OrderDetail({ navigation, route }) {
             <MYlist label="Model" value={item.model} />
           </View>
 
+          {item.kain == 'Dari Konsumen' &&
+            <MYlist label="Kain Dikirim" value={item.dikirim} />
+          }
 
 
-          <MYlist label="Produk" value={item.produk} />
+          {item.model == 'Dari Konsumen' &&
+
+            <View style={{
+              padding: 10
+            }}>
+              <Text style={{
+                fontFamily: fonts.secondary[600],
+                fontSize: 13,
+                marginBottom: 10,
+              }}>Contoh Model</Text>
+              <Image style={{
+                width: 200,
+                height: 200,
+                resizeMode: 'contain'
+              }} source={{
+                uri: item.foto_model
+              }} />
+            </View>
+          }
+
+
+          <MYlist label="Produk" value={item.jenis == 'Produk Baru' ? 'Produk Baru' : item.produk} />
           {route.params.jenis == 'Produk Jadi' && <MYlist label="Ukuran" value={item.ukuran} />}
 
           {route.params.jenis == 'Produk Baru' &&
